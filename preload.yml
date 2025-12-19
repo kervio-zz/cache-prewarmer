@@ -9,7 +9,7 @@ on:
   # Exécution planifiée (cron)
   schedule:
     # Tous les jours à 2h du matin (UTC)
-    - cron: '0 2 * * *'
+    - cron: '0 3 * * *'
   
   # Permet l'exécution manuelle depuis l'interface GitHub
   workflow_dispatch:
