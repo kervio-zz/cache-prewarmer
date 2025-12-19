@@ -1,17 +1,11 @@
 name: WordPress Cache Prewarmer
 
 on:
-  # Déclenchement au push (pour tester)
   push:
     branches:
       - main
-  
-  # Exécution planifiée (cron)
   schedule:
-    # Tous les jours à 2h du matin (UTC)
-    - cron: '0 2 * * *'
-  
-  # Permet l'exécution manuelle depuis l'interface GitHub
+    - cron: '0 3 * * *'
   workflow_dispatch:
 
 jobs:
@@ -19,34 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: 📥 Checkout du repository
+      - name: Checkout du repository
         uses: actions/checkout@v4
       
-      - name: 🟢 Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
       
-      - name: 📦 Installation des dépendances
-        run: npm ci
+      - name: Installation des dependances
+        run: npm install
       
-      - name: 🚀 Préchargement du cache
+      - name: Prechargement du cache
         run: node preload.js
-        env:
-          # Variables d'environnement (optionnel)
-          SITE_URL: ${{ secrets.SITE_URL }}
-      
-     - name: 📊 Upload des logs (en cas d'erreur)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: preload-logs
-          path: '*.log'
-          retention-days: 7
-```
-
-## 📝 Rappel : Où créer ce fichier sur GitHub
-
-Quand vous créez ce fichier sur GitHub, le chemin complet doit être :
-```
-.github/workflows/preload.yml
