@@ -1,12 +1,15 @@
 name: WordPress Cache Prewarmer
 
 on:
-  # Exécution planifiée (cron) 
+  # Déclenchement au push (pour tester)
+  push:
+    branches:
+      - main
+  
+  # Exécution planifiée (cron)
   schedule:
-    # Tous les jours à 3h du matin (UTC)
+    # Tous les jours à 2h du matin (UTC)
     - cron: '0 2 * * *'
-    # Toutes les 6 heures
-    # - cron: '0 */6 * * *'
   
   # Permet l'exécution manuelle depuis l'interface GitHub
   workflow_dispatch:
