@@ -2,7 +2,7 @@ name: WordPress Cache Prewarmer
 
 on:
   schedule:
-- cron: '0 */6 * * *'  # 0h, 6h, 12h, 18h UTC
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
