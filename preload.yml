@@ -1,7 +1,7 @@
 name: WordPress Cache Prewarmer
 
 on:
-  # Exécution planifiée (cron)
+  # Exécution planifiée (cron) 
   schedule:
     # Tous les jours à 3h du matin (UTC)
     - cron: '0 2 * * *'
