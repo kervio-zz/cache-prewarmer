@@ -72,7 +72,7 @@ async function preloadCache() {
       // Charger la page et attendre que le réseau soit inactif
       await page.goto(url, {
         waitUntil: 'networkidle2', // Attend que le réseau soit inactif pendant 500ms
-        timeout: 60000 // Timeout de 30 secondes
+        timeout: 120000 // Timeout de 30 secondes
       });
       
       // Attendre un peu plus pour être sûr que tout est chargé
