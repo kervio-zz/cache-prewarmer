@@ -37,14 +37,12 @@ jobs:
           # Variables d'environnement (optionnel)
           SITE_URL: ${{ secrets.SITE_URL }}
       
-      - name: 📊 Upload des logs (en cas d'erreur)
+     - name: 📊 Upload des logs (en cas d'erreur)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: preload-logs
-          path: |
-            *.log
-            *.txt
+          path: '*.log'
           retention-days: 7
 ```
 
