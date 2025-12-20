@@ -54,6 +54,8 @@ async function preloadCache() {
     '/saisie_bibliotheque/',
     '/saisie_videotheque/',
     '/espace-redaction/'
+    '/saisie-agenda/'
+    '/redaction-article/'
   ];
   
   urls = urls.filter(url => !urlsToExclude.some(excluded => url.includes(excluded)));
