@@ -3,7 +3,7 @@ const axios = require('axios');
 const { parseStringPromise } = require('xml2js');
 
 // Configuration
-const SITE_URL = 'https://votre-site.com';
+const SITE_URL = 'https://parler-et-revivre.fr';
 const SITEMAP_URL = `${SITE_URL}/sitemap.xml`;
 const DELAY_BETWEEN_PAGES = 2000; // 2 secondes entre chaque page
 
