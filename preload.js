@@ -13,18 +13,18 @@ async function getSitemapUrls(sitemapUrl) {
     const response = await axios.get(sitemapUrl);
     const result = await parseStringPromise(response.data);
     
-    let urls = [];
+    const urls = [];
     
     // Sitemap simple
     if (result.urlset && result.urlset.url) {
-      urls = result.urlset.url.map(u => u.loc[0]);
+      return result.urlset.url.map(u => u.loc[0]);
     }
     // Sitemap index (contient d'autres sitemaps)
     else if (result.sitemapindex && result.sitemapindex.sitemap) {
       console.log('📋 Sitemap index détecté, récupération des sous-sitemaps...');
       for (const sitemap of result.sitemapindex.sitemap) {
         const subUrls = await getSitemapUrls(sitemap.loc[0]);
-        urls = urls.concat(subUrls);
+        urls.push(...subUrls);
       }
     }
     
@@ -39,7 +39,7 @@ async function preloadCache() {
   console.log('🚀 Démarrage du préchargement du cache WordPress\n');
   
   // Récupérer toutes les URLs du sitemap
-  const urls = await getSitemapUrls(SITEMAP_URL);
+  let urls = await getSitemapUrls(SITEMAP_URL);
   
   if (urls.length === 0) {
     console.log('⚠️ Aucune URL trouvée dans le sitemap');
