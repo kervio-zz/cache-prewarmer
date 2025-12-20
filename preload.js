@@ -53,8 +53,8 @@ async function preloadCache() {
     '/revue-de-presse/',
     '/saisie_bibliotheque/',
     '/saisie_videotheque/',
-    '/espace-redaction/'
-    '/saisie-agenda/'
+    '/espace-redaction/',
+    '/saisie-agenda/',
     '/redaction-article/'
   ];
   
