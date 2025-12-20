@@ -3,7 +3,7 @@ const axios = require('axios');
 const { parseStringPromise } = require('xml2js');
 
 // Configuration
-const SITE_URL = 'https://parler-et-revivre.fr'; // ← CHANGEZ CETTE URL
+const SITE_URL = 'https://votre-site.com';
 const SITEMAP_URL = `${SITE_URL}/sitemap.xml`;
 const DELAY_BETWEEN_PAGES = 2000; // 2 secondes entre chaque page
 
@@ -48,6 +48,17 @@ async function preloadCache() {
   
   console.log(`✅ ${urls.length} URLs trouvées\n`);
   
+  // Exclure les URLs problématiques
+  const urlsToExclude = [
+    '/revue-de-presse/',
+    '/saisie_bibliotheque/',
+    '/saisie_videotheque/',
+    '/espace-redaction/'
+  ];
+  
+  urls = urls.filter(url => !urlsToExclude.some(excluded => url.includes(excluded)));
+  console.log(`📋 ${urls.length} URLs après filtrage (${urlsToExclude.length} exclue(s))\n`);
+  
   // Lancer le navigateur
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -72,7 +83,7 @@ async function preloadCache() {
       // Charger la page et attendre que le réseau soit inactif
       await page.goto(url, {
         waitUntil: 'networkidle2', // Attend que le réseau soit inactif pendant 500ms
-        timeout: 120000 // Timeout de 30 secondes
+        timeout: 30000 // Timeout de 30 secondes
       });
       
       // Attendre un peu plus pour être sûr que tout est chargé
