@@ -38,6 +38,36 @@ async function getSitemapUrls(sitemapUrl) {
 async function preloadCache() {
   console.log('🚀 Démarrage du préchargement du cache WordPress\n');
   
+  // Purger le cache avant de le recharger
+  console.log('🗑️ Purge du cache WordPress...');
+  try {
+    // Méthode 1 : URL de purge LWS (si disponible)
+    await axios.get(`${SITE_URL}/?lws_cache_purge=all`, {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'CachePrewarmer/1.0'
+      }
+    }).catch(() => {
+      // Si cette méthode échoue, on essaie la méthode 2
+      console.log('⚠️ Méthode 1 de purge non disponible, essai méthode 2...');
+    });
+    
+    // Méthode 2 : Purge via paramètre nocache sur la page d'accueil
+    await axios.get(`${SITE_URL}/?nocache=1&purge=all`, {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'CachePrewarmer/1.0'
+      }
+    }).catch(() => {});
+    
+    console.log('✅ Requêtes de purge envoyées');
+    console.log('⏳ Attente de 10 secondes pour que la purge soit effective...\n');
+    await new Promise(resolve => setTimeout(resolve, 10000));
+  } catch (error) {
+    console.log('⚠️ Impossible de purger automatiquement le cache');
+    console.log('   Le préchargement va continuer mais peut afficher d\'anciennes versions\n');
+  }
+  
   // Récupérer toutes les URLs du sitemap
   let urls = await getSitemapUrls(SITEMAP_URL);
   
