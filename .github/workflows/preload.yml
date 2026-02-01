@@ -21,5 +21,34 @@ jobs:
       - name: Installation des dependances
         run: npm install
       
+      - name: Purge du cache via SSH
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
+          chmod 600 /tmp/ssh_key
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_PATH }} && wp cache flush --allow-root"
+          rm /tmp/ssh_key
+      
+      - name: Attente apres purge
+        run: sleep 5
+      
       - name: Prechargement du cache
         run: node preload.js
+```
+
+## ✅ Ce qui a changé
+
+- ✅ **Purge via SSH** avant le préchargement avec `wp cache flush`
+- ✅ La clé SSH est utilisée depuis vos secrets GitHub
+- ✅ La clé est **supprimée** après utilisation (`rm /tmp/ssh_key`) pour la sécurité
+- ✅ **5 secondes d'attente** après la purge avant de recharger
+
+## 🧪 Test
+
+Une fois le fichier mis à jour et commité :
+1. Allez dans **Actions**
+2. Lancez le workflow **manuellement**
+3. Regardez les logs de l'étape **"Purge du cache via SSH"**
+
+Vous devriez voir :
+```
+Success: The cache was flushed.
