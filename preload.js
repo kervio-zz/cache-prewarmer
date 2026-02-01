@@ -6,6 +6,7 @@ const { parseStringPromise } = require('xml2js');
 const SITE_URL = 'https://parler-et-revivre.fr';
 const SITEMAP_URL = `${SITE_URL}/sitemap.xml`;
 const DELAY_BETWEEN_PAGES = 2000; // 2 secondes entre chaque page
+const PURGE_URL = `${SITE_URL}/cache-purge.php?key=7c447a1f8a51856e8b2551135981ca19fd50173de0b7b5502d9d0132883c5c9f`;
 
 async function getSitemapUrls(sitemapUrl) {
   try {
@@ -38,34 +39,19 @@ async function getSitemapUrls(sitemapUrl) {
 async function preloadCache() {
   console.log('🚀 Démarrage du préchargement du cache WordPress\n');
   
-  // Purger le cache avant de le recharger
+  // Purger le cache via le fichier PHP
   console.log('🗑️ Purge du cache WordPress...');
   try {
-    // Méthode 1 : URL de purge LWS (si disponible)
-    await axios.get(`${SITE_URL}/?lws_cache_purge=all`, {
+    const response = await axios.get(PURGE_URL, {
       timeout: 10000,
-      headers: {
-        'User-Agent': 'CachePrewarmer/1.0'
-      }
-    }).catch(() => {
-      // Si cette méthode échoue, on essaie la méthode 2
-      console.log('⚠️ Méthode 1 de purge non disponible, essai méthode 2...');
+      headers: { 'User-Agent': 'CachePrewarmer/1.0' }
     });
-    
-    // Méthode 2 : Purge via paramètre nocache sur la page d'accueil
-    await axios.get(`${SITE_URL}/?nocache=1&purge=all`, {
-      timeout: 10000,
-      headers: {
-        'User-Agent': 'CachePrewarmer/1.0'
-      }
-    }).catch(() => {});
-    
-    console.log('✅ Requêtes de purge envoyées');
+    console.log(`✅ ${response.data}`);
     console.log('⏳ Attente de 10 secondes pour que la purge soit effective...\n');
     await new Promise(resolve => setTimeout(resolve, 10000));
   } catch (error) {
-    console.log('⚠️ Impossible de purger automatiquement le cache');
-    console.log('   Le préchargement va continuer mais peut afficher d\'anciennes versions\n');
+    console.log('❌ Erreur de purge:', error.message);
+    console.log('⚠️ Le préchargement va continuer mais peut afficher d\'anciennes versions\n');
   }
   
   // Récupérer toutes les URLs du sitemap
@@ -114,8 +100,8 @@ async function preloadCache() {
       
       // Charger la page et attendre que le réseau soit inactif
       await page.goto(url, {
-        waitUntil: 'networkidle2', // Attend que le réseau soit inactif pendant 500ms
-        timeout: 30000 // Timeout de 30 secondes
+        waitUntil: 'networkidle2',
+        timeout: 30000
       });
       
       // Attendre un peu plus pour être sûr que tout est chargé
