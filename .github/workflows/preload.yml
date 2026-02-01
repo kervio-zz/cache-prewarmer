@@ -33,4 +33,3 @@ jobs:
       
       - name: Prechargement du cache
         run: node preload.js
-```
