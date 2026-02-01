@@ -21,15 +21,5 @@ jobs:
       - name: Installation des dependances
         run: npm install
       
-      - name: Purge du cache via SSH
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
-          chmod 600 /tmp/ssh_key
-          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_PATH }} && wp cache flush --allow-root"
-          rm /tmp/ssh_key
-      
-      - name: Attente apres purge
-        run: sleep 5
-      
       - name: Prechargement du cache
         run: node preload.js
