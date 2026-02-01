@@ -34,21 +34,3 @@ jobs:
       - name: Prechargement du cache
         run: node preload.js
 ```
-
-## ✅ Ce qui a changé
-
-- ✅ **Purge via SSH** avant le préchargement avec `wp cache flush`
-- ✅ La clé SSH est utilisée depuis vos secrets GitHub
-- ✅ La clé est **supprimée** après utilisation (`rm /tmp/ssh_key`) pour la sécurité
-- ✅ **5 secondes d'attente** après la purge avant de recharger
-
-## 🧪 Test
-
-Une fois le fichier mis à jour et commité :
-1. Allez dans **Actions**
-2. Lancez le workflow **manuellement**
-3. Regardez les logs de l'étape **"Purge du cache via SSH"**
-
-Vous devriez voir :
-```
-Success: The cache was flushed.
