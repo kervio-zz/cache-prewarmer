@@ -105,7 +105,7 @@ async function preloadCache() {
       });
       
       // Attendre un peu plus pour être sûr que tout est chargé
-      await page.waitForTimeout(1000);
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       console.log(`   ✅ Succès\n`);
       successCount++;
@@ -117,7 +117,7 @@ async function preloadCache() {
     
     // Délai entre les pages pour ne pas surcharger le serveur
     if (i < urls.length - 1) {
-      await page.waitForTimeout(DELAY_BETWEEN_PAGES);
+      await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_PAGES));
     }
   }
   
